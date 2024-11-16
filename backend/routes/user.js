@@ -3,8 +3,11 @@ const  { authMiddleware } = require("../middleware");
 const router = express.Router();
 const zod = require("zod");
 const { User, Account } = require("../db");
-const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = require("../config");
+const jwt = require('jsonwebtoken');
+const { JWT_SECRET } = require("../config.js");
+
+// Ensure you have a secret key defined
+const secretKey = process.env.JWT_SECRET || "your_default_secret"; // Replace with your actual secret
 
 const signupBody = zod.object({
     username: zod.string().email(),
@@ -46,7 +49,7 @@ router.post("/signup", async (req, res) => {
 
     const token = jwt.sign({
         userId
-    }, JWT_SECRET);
+    }, secretKey, { expiresIn: '1h' });
 
     res.json({
         message: "User created successfully",
@@ -75,7 +78,7 @@ router.post("/signin", async (req, res) => {
     if (user) {
         const token = jwt.sign({
             userId: user._id
-        }, JWT_SECRET);
+        }, secretKey, { expiresIn: '1h' });
 
         res.json({
             token: token
