@@ -1,2 +1,3 @@
-const JSON_SECRET="swastikSecret";
-module.exxports=JSON_SECRET;
+module.exports = {
+	JWT_SECRET: "your-jwt-secret"
+}
